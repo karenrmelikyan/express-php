@@ -85,7 +85,7 @@ class Server
             $response = [];
 
             try {
-                $response = $this->checkRoutes();
+                $response = $this->kernel();
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -101,18 +101,26 @@ class Server
 
     /**
      * return either an array of data from the DB
-     * or throw exception with appropriate message
+     * or throw exception with an appropriate message
      *
      * @return array
      * @throws Exception
      */
-    private function checkRoutes(): array
+    private function kernel(): array
     {
         $result = [];
 
         foreach (require 'app/routes.php' as $route) {
 
             if (isset($route[$this->route][$this->method])) {
+
+                foreach (require 'app/middlewares.php' as $middleware) {
+                    foreach ($middleware['routes'] as $middlewareRoute) {
+                        if (($middlewareRoute === $this->route) && !$middleware['func_result']) {
+                            throw new Exception("\nError! Forbidden handling of the route $this->route by middleware\n");
+                        }
+                    }
+                }
 
                 $result = $route[$this->route][$this->method]['func_result'];
 
@@ -137,11 +145,5 @@ class Server
         return $result;
     }
 
-    private function checkMiddlewares(string $currentRoute): bool
-    {
-        $middlewares = require 'app/routes.php';
-
-        return false;
-    }
 
 }

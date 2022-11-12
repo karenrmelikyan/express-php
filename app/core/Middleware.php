@@ -2,16 +2,16 @@
 
 namespace App\Core;
 
+use JetBrains\PhpStorm\ArrayShape;
+
 final class Middleware
 {
-    public static function beforeRoutes(array $routes, callable $foo): bool
+    #[ArrayShape(['routes' => "array", 'func_result' => "mixed"])]
+    public static function checkRoutes(array $routes, callable $foo): array
     {
-        return $foo();
+        return [
+            'routes' => $routes,
+            'func_result' => $foo(),
+        ];
     }
-
-    public static function afterRoutes(array $routes, callable $foo): bool
-    {
-        return $foo();
-    }
-
 }
