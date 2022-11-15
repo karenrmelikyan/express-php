@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Core;
 
@@ -14,7 +16,7 @@ final class Route
         return [
             $uri => [
                 'GET' => [
-                    'func_result' => $foo(),
+                    'func_result' => &$foo,
                 ]
             ],
         ];
@@ -30,7 +32,7 @@ final class Route
         return [
             $uri => [
                 'POST' => [
-                    'func_result' => $foo(),
+                    'func_result' => &$foo,
                 ]
             ],
         ];
@@ -46,7 +48,7 @@ final class Route
         return [
             $uri => [
                 'PUT' => [
-                    'func_result' => $foo(),
+                    'func_result' => &$foo,
                 ]
             ],
         ];
@@ -62,7 +64,7 @@ final class Route
         return [
             $uri => [
                 'DELETE' => [
-                    'func_result' => $foo(),
+                    'func_result' => &$foo,
                 ]
             ],
         ];

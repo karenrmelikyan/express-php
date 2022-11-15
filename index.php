@@ -4,6 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 require_once 'app/core/Server.php';
 require_once 'app/core/Route.php';
 require_once 'app/core/Middleware.php';
+require_once 'app/core/Request.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
@@ -15,10 +16,6 @@ $dotenv->safeLoad();
     ->setDBUserName($_ENV['APP_DB_USERNAME'])
     ->setDBPassword($_ENV['APP_DB_PASSWORD'])
     ->run();
-
-//// https://github.com/illuminate/database
-
-
 
 
 

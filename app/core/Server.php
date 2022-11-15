@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 use Exception;
 use React\Http\HttpServer;
 use React\Socket\SocketServer;
 use React\Http\Message\Response;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
-class Server
+final class Server
 {
     private string $serverHost;
+
     private string $dbHost;
     private string $dbName;
     private string $dbUsername;
@@ -18,7 +21,7 @@ class Server
 
     private string $route;
     private string $method;
-    private string $body;
+    private array  $body;
     private array  $params;
 
     /**
@@ -76,16 +79,22 @@ class Server
      */
     public function run(): void
     {
-        $http = new HttpServer(function (ServerRequestInterface $request) {
-            $this->method = $request->getMethod();
-            $this->route = $request->getUri()->getPath();
-            $this->params = $request->getQueryParams();
-            $this->body = $request->getBody()->getContents();
+        $http = new HttpServer(function (ServerRequest $serverRequest) {
+            $this->method = $serverRequest->getMethod();
+            $this->route = $serverRequest->getUri()->getPath();
+            $this->params = $serverRequest->getQueryParams();
+            $this->body = json_decode($serverRequest->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+            $request = new Request();
+            $request->setMethod($this->method);
+            $request->setRoute($this->route);
+            $request->setParams($this->params);
+            $request->setBody($this->body);
 
             $response = [];
 
             try {
-                $response = $this->kernel();
+                $response = $this->kernel($request);
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -106,12 +115,11 @@ class Server
      * @return array
      * @throws Exception
      */
-    private function kernel(): array
+    private function kernel(Request $request): array
     {
         $result = [];
 
         foreach (require 'app/routes.php' as $route) {
-
             if (isset($route[$this->route][$this->method])) {
 
                 foreach (require 'app/middlewares.php' as $middleware) {
@@ -122,7 +130,7 @@ class Server
                     }
                 }
 
-                $result = $route[$this->route][$this->method]['func_result'];
+                $result = $route[$this->route][$this->method]['func_result']($request);
 
                 if (is_array($result)) {
                     return $result;
