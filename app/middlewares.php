@@ -1,6 +1,7 @@
 <?php
 
-use App\Core\Middleware;
+use Core\Middleware;
+use Core\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,10 @@ return [
     //
     Middleware::checkRoutes([
         '/',
-    ], static function () {
-
+        '/test',
+    ], static function (Request $request) {
 
         return true;
     }),
-
-
-
 
 ];

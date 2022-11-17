@@ -1,7 +1,7 @@
 <?php
 
-use App\Core\Route;
-use App\Core\Request;
+use Core\Route;
+use Core\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,21 +15,23 @@ use App\Core\Request;
 */
 
 return [
-    Route::post('/', static function (Request $request) {
-
-        return [$request->getBody(), 2];
-    }),
-
     Route::get('/', static function (Request $request) {
 
-        return [3, $request->getRoute()];
+        return [1, 2];
+    }),
+
+    Route::post('/', static function (Request $request) {
+
+        return [3, 4];
     }),
 
     Route::put('/', static function (Request $request) {
-        return [5, $request->getMethod()];
+
+        return [5, 6];
     }),
 
     Route::delete('/', static function (Request $request) {
-        return [7, $request->getParams()];
+
+        return [7, 8];
     }),
 ];

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace Core;
 
 use Exception;
 use React\Http\HttpServer;
@@ -124,7 +124,7 @@ final class Server
 
                 foreach (require 'app/middlewares.php' as $middleware) {
                     foreach ($middleware['routes'] as $middlewareRoute) {
-                        if (($middlewareRoute === $this->route) && !$middleware['func_result']) {
+                        if (($middlewareRoute === $this->route) && !$middleware['func_result']($request)) {
                             throw new Exception("\nError! Forbidden handling of the route $this->route by middleware\n");
                         }
                     }

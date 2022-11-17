@@ -1,24 +1,21 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
-require_once 'app/core/Server.php';
-require_once 'app/core/Route.php';
-require_once 'app/core/Middleware.php';
-require_once 'app/core/Request.php';
+require_once 'core/Server.php';
+require_once 'core/Route.php';
+require_once 'core/Middleware.php';
+require_once 'core/Request.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
-(new App\Core\Server())
+(new Core\Server())
     ->setServerHost($_ENV['APP_SERVER_HOST'])
     ->setDBHost($_ENV['APP_DB_HOST'])
     ->setDBName($_ENV['APP_DB_NAME'])
     ->setDBUserName($_ENV['APP_DB_USERNAME'])
     ->setDBPassword($_ENV['APP_DB_PASSWORD'])
     ->run();
-
-
-
 
 
 
