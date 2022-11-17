@@ -59,6 +59,22 @@ final class Route
      * @param callable $foo
      * @return array[][]
      */
+    public static function patch(string $uri, callable $foo): array
+    {
+        return [
+            $uri => [
+                'PATCH' => [
+                    'func_result' => &$foo,
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @param string $uri
+     * @param callable $foo
+     * @return array[][]
+     */
     public static function delete(string $uri, callable $foo): array
     {
         return [

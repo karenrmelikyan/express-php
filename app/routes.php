@@ -30,8 +30,13 @@ return [
         return [5, 6];
     }),
 
-    Route::delete('/', static function (Request $request) {
+    Route::patch('/', static function (Request $request) {
 
         return [7, 8];
+    }),
+
+    Route::delete('/', static function (Request $request) {
+
+        return [9, 10];
     }),
 ];
