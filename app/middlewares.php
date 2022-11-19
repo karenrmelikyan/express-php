@@ -17,14 +17,18 @@ use Core\Request;
 */
 
 return [
-
-    //
     Middleware::checkRoutes([
         '/',
-        '/test',
     ], static function (Request $request) {
 
         return true;
+    }),
+
+    Middleware::checkRoutes([
+        '/test',
+    ], static function (Request $request) {
+
+        return false;
     }),
 
 ];

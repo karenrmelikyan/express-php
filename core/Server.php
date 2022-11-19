@@ -19,11 +19,6 @@ final class Server
     private string $dbUsername;
     private string $dbPassword;
 
-    private string $route;
-    private string $method;
-    private array  $body;
-    private array  $params;
-
     /**
      * @param string $host
      * @return $this
@@ -80,17 +75,24 @@ final class Server
     public function run(): void
     {
         $http = new HttpServer(function (ServerRequest $serverRequest) {
-            $this->method = $serverRequest->getMethod();
-            $this->route = $serverRequest->getUri()->getPath();
-            $this->params = $serverRequest->getQueryParams();
-            $this->body = json_decode($serverRequest->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-            $request = new Request();
-            $request->setMethod($this->method);
-            $request->setRoute($this->route);
-            $request->setParams($this->params);
-            $request->setBody($this->body);
+            // extract data from ServerRequest
+            $method = $serverRequest->getMethod();
+            $route = $serverRequest->getUri()->getPath();
 
+            if (!empty($p = $serverRequest->getQueryParams())) {
+                $params = $p;
+            } else {
+                $params = [];
+            }
+
+            if (!empty($b = $serverRequest->getBody()->getContents())) {
+                $body = json_decode($b, true, 512, JSON_THROW_ON_ERROR);
+            } else {
+                $body = [];
+            }
+
+            $request = new Request(method: $method, route: $route, body: $body, params: $params);
             $response = [];
 
             try {
@@ -112,6 +114,7 @@ final class Server
      * return either an array of data from the DB
      * or throw exception with an appropriate message
      *
+     * @param Request $request
      * @return array
      * @throws Exception
      */
@@ -119,25 +122,28 @@ final class Server
     {
         $result = [];
 
+        $currentRoute = $request->getRoute();
+        $currentMethod = $request->getMethod();
+
         foreach (require 'app/routes.php' as $route) {
-            if (isset($route[$this->route][$this->method])) {
+            if (isset($route[$currentRoute][$currentMethod])) {
 
                 foreach (require 'app/middlewares.php' as $middleware) {
                     foreach ($middleware['routes'] as $middlewareRoute) {
-                        if (($middlewareRoute === $this->route) && !$middleware['func_result']($request)) {
-                            throw new Exception("\nError! Forbidden handling of the route $this->route by middleware\n");
+                        if (($middlewareRoute === $currentRoute) && !$middleware['func_result']($request)) {
+                            throw new Exception("\nError! Forbidden handling of the route $currentRoute by middleware\n");
                         }
                     }
                 }
 
-                $result = $route[$this->route][$this->method]['func_result']($request);
+                $result = $route[$currentRoute][$currentMethod]['func_result']($request);
 
                 if (is_array($result)) {
                     return $result;
                 }
 
                 throw new Exception(
-                    "\nYour {$this->route} route handler function for {$this->method} 
+                    "\nYour {$currentRoute} route handler function for {$currentMethod}
                                      method, should return data array\n"
                 );
             }
@@ -146,7 +152,7 @@ final class Server
 
         if (count($result) === 0) {
             throw new Exception(
-                "\nThe route {$this->route} doesn't define\n"
+                "\nThe route {$currentRoute} doesn't define\n"
             );
         }
 

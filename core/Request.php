@@ -6,68 +6,45 @@ namespace Core;
 
 final class Request
 {
-    private string $method;
-    private string $route;
-    private array  $body;
-    private array  $params;
+    public function __construct(
+        private readonly string $method,
+        private readonly string $route,
+        private readonly array  $body,
+        private readonly array  $params,
+    )
+    {
+        //
+    }
 
     /**
      * @return string
      */
-    public function getMethod(): string {
+    public function getMethod(): string
+    {
         return $this->method;
     }
 
     /**
      * @return string
      */
-    public function getRoute(): string {
+    public function getRoute(): string
+    {
         return $this->route;
     }
 
     /**
      * @return array
      */
-    public function getBody(): array {
+    public function getBody(): array
+    {
         return $this->body;
     }
 
     /**
      * @return array
      */
-    public function getParams(): array {
+    public function getParams(): array
+    {
         return $this->params;
-    }
-
-    /**
-     * @param string $method
-     * @return void
-     */
-    public function setMethod(string $method = ''): void {
-        $this->method = $method;
-    }
-
-    /**
-     * @param string $route
-     * @return void
-     */
-    public function setRoute(string $route = ''): void {
-        $this->route = $route;
-    }
-
-    /**
-     * @param array $body
-     * @return void
-     */
-    public function setBody(array $body = []): void {
-        $this->body = $body;
-    }
-
-    /**
-     * @param array $params
-     * @return void
-     */
-    public function setParams(array $params = []): void {
-        $this->params = $params;
     }
 }
