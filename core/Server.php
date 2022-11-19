@@ -12,61 +12,8 @@ use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 final class Server
 {
-    private string $serverHost;
-
-    private string $dbHost;
-    private string $dbName;
-    private string $dbUsername;
-    private string $dbPassword;
-
-    /**
-     * @param string $host
-     * @return $this
-     */
-    public function setServerHost(string $host = '127.0.0.1:8901'): self
+    public function __construct(private string $serverHost = '127.0.0.1:8901')
     {
-        $this->serverHost = $host;
-        return $this;
-    }
-
-    /**
-     * @param string $host
-     * @return $this
-     */
-    public function setDBHost(string $host = '3306'): self
-    {
-        $this->dbHost = $host;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setDBName(string $name = 'database'): self
-    {
-        $this->dbName = $name;
-        return $this;
-    }
-
-    /**
-     * @param string $username
-     * @return $this
-     */
-    public function setDBUserName(string $username = 'root'): self
-    {
-        $this->dbUsername = $username;
-        return $this;
-    }
-
-    /**
-     * @param string $password
-     * @return $this
-     */
-    public function setDBPassword(string $password = 'root'): self
-    {
-        $this->dbPassword = $password;
-        return $this;
     }
 
     /**
@@ -131,7 +78,7 @@ final class Server
                 foreach (require 'app/middlewares.php' as $middleware) {
                     foreach ($middleware['routes'] as $middlewareRoute) {
                         if (($middlewareRoute === $currentRoute) && !$middleware['func_result']($request)) {
-                            throw new Exception("\nError! Forbidden handling of the route $currentRoute by middleware\n");
+                            throw new \RuntimeException("\nError! Forbidden handling of the route $currentRoute by middleware\n");
                         }
                     }
                 }
@@ -142,7 +89,7 @@ final class Server
                     return $result;
                 }
 
-                throw new Exception(
+                throw new \RuntimeException(
                     "\nYour {$currentRoute} route handler function for {$currentMethod}
                                      method, should return data array\n"
                 );
@@ -151,13 +98,12 @@ final class Server
         }
 
         if (count($result) === 0) {
-            throw new Exception(
+            throw new \RuntimeException(
                 "\nThe route {$currentRoute} doesn't define\n"
             );
         }
 
         return $result;
     }
-
 
 }
