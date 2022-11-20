@@ -40,13 +40,13 @@ final class Server
                 $body = [];
             }
 
+            $response = null;
             $request = new Request(
                 method: $method,
                 route: $route,
                 body: $body,
                 params: $params,
             );
-            $response = [];
 
             try {
                 $response = $this->kernel($request);
@@ -71,9 +71,9 @@ final class Server
      * @return array
      * @throws Exception
      */
-    private function kernel(Request $request): array
+    private function kernel(Request $request): array|string
     {
-        $result = [];
+        $result = null;
 
         $currentRoute = $request->getRoute();
         $currentMethod = $request->getMethod();
@@ -91,19 +91,18 @@ final class Server
 
                 $result = $route[$currentRoute][$currentMethod]['func_result']($request);
 
-                if (is_array($result)) {
+                if (is_array($result) || is_string($result)) {
                     return $result;
                 }
 
                 throw new \RuntimeException(
-                    "\nYour {$currentRoute} route handler function for {$currentMethod}
-                                     method, should return data array\n"
+                    "\nYour {$currentRoute} route handler function for {$currentMethod} method, should return either data array or string\n"
                 );
             }
 
         }
 
-        if (count($result) === 0) {
+        if (!$result) {
             throw new \RuntimeException(
                 "\nThe route {$currentRoute} doesn't define\n"
             );
