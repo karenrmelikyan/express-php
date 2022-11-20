@@ -40,7 +40,7 @@ final class Server
                 $body = [];
             }
 
-            $response = null;
+            // create request
             $request = new Request(
                 method: $method,
                 route: $route,
@@ -51,7 +51,11 @@ final class Server
             try {
                 $response = $this->kernel($request);
             } catch (Exception $e) {
-                echo $e->getMessage();
+                $response = $e->getMessage();
+            }
+
+            if (is_string($response)) {
+                return Response::plaintext($response);
             }
 
             return Response::json($response);
@@ -84,7 +88,8 @@ final class Server
                 foreach (require 'app/middlewares.php' as $middleware) {
                     foreach ($middleware['routes'] as $middlewareRoute) {
                         if (($middlewareRoute === $currentRoute) && !$middleware['func_result']($request)) {
-                            throw new \RuntimeException("\nError! Forbidden handling of the route $currentRoute by middleware\n");
+                            throw new \RuntimeException("WARNING! Runtime Exception was thrown!\n
+                            MESSAGE: Forbidden handling of the route $currentRoute by middleware\n");
                         }
                     }
                 }
@@ -96,7 +101,8 @@ final class Server
                 }
 
                 throw new \RuntimeException(
-                    "\nYour {$currentRoute} route handler function for {$currentMethod} method, should return either data array or string\n"
+                    "WARNING! Runtime Exception was thrown. \nMESSAGE: Your {$currentRoute}" .
+                    "route handler function for {$currentMethod} method, should return either data array or string\n"
                 );
             }
 
@@ -104,7 +110,7 @@ final class Server
 
         if (!$result) {
             throw new \RuntimeException(
-                "\nThe route {$currentRoute} doesn't define\n"
+                "WARNING! Runtime Exception was thrown!\nMESSAGE: The route {$currentRoute} doesn't define\n"
             );
         }
 

@@ -18,17 +18,17 @@ use Core\Request;
 return [
     Route::get('/', static function (Request $request) {
 
-        return 0;
+        return [1, 2];
     }),
 
     Route::post('/', static function (Request $request) {
 
-        return 'hello express-php';
+        return 'Element was added';
     }),
 
     Route::put('/', static function (Request $request) {
 
-        return [5, 6];
+        return ['name' => 'John'];
     }),
 
     Route::patch('/', static function (Request $request) {
@@ -38,6 +38,6 @@ return [
 
     Route::delete('/', static function (Request $request) {
 
-        return [9, 10];
+        return 'Element was deleted';
     }),
 ];
