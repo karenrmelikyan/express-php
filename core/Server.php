@@ -14,6 +14,7 @@ final class Server
 {
     public function __construct(private string $serverHost = '127.0.0.1:8901')
     {
+        //
     }
 
     /**
@@ -39,7 +40,12 @@ final class Server
                 $body = [];
             }
 
-            $request = new Request(method: $method, route: $route, body: $body, params: $params);
+            $request = new Request(
+                method: $method,
+                route: $route,
+                body: $body,
+                params: $params,
+            );
             $response = [];
 
             try {
@@ -54,12 +60,12 @@ final class Server
         $socket = new SocketServer($this->serverHost);
         $http->listen($socket);
 
-        echo "Server listen host: http://$this->serverHost";
+        echo "Server listen host: $this->serverHost";
     }
 
     /**
-     * return either an array of data from the DB
-     * or throw exception with an appropriate message
+     * return either an array or throw
+     * exception with an appropriate message
      *
      * @param Request $request
      * @return array
