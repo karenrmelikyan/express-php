@@ -10,16 +10,13 @@ use Core\Request;
 |
 */
 
-function test()
-{
-    return 'test';
-}
+
 
 return [
 
     '/' =>
        [
-           'GET' => gettype(&$test),
+           'GET' => '',
        ],
        [
            'POST' => ''
