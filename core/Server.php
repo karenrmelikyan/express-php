@@ -77,42 +77,15 @@ final class Server
      */
     private function kernel(Request $request): array|string
     {
-        $result = null;
+        $result = [];
 
-        $currentRoute = $request->getRoute();
-        $currentMethod = $request->getMethod();
+        $routes = require 'app/routes.php';
 
-        foreach (require 'app/routes.php' as $route) {
-            if (isset($route[$currentRoute][$currentMethod])) {
+        $result = $routes[$request->getRoute()][$request->getMethod()];
 
-                foreach (require 'app/middlewares.php' as $middleware) {
-                    foreach ($middleware['routes'] as $middlewareRoute) {
-                        if (($middlewareRoute === $currentRoute) && !$middleware['func_result']($request)) {
-                            throw new \RuntimeException("WARNING! Runtime Exception was thrown!\n
-                            MESSAGE: Forbidden handling of the route $currentRoute by middleware\n");
-                        }
-                    }
-                }
 
-                $result = $route[$currentRoute][$currentMethod]['func_result']($request);
 
-                if (is_array($result) || is_string($result)) {
-                    return $result;
-                }
 
-                throw new \RuntimeException(
-                    "WARNING! Runtime Exception was thrown. \nMESSAGE: Your {$currentRoute}" .
-                    "route handler function for {$currentMethod} method, should return either data array or string\n"
-                );
-            }
-
-        }
-
-        if (!$result) {
-            throw new \RuntimeException(
-                "WARNING! Runtime Exception was thrown!\nMESSAGE: The route {$currentRoute} doesn't define\n"
-            );
-        }
 
         return $result;
     }
