@@ -11,35 +11,16 @@ use Core\Request;
 */
 
 
-
 return [
 
-    '/' =>
-       [
-           'GET' => '',
-       ],
-       [
-           'POST' => ''
-       ],
-       [
-           'PUT' => ''
-       ],
-       [
-           'DELETE' => ''
-       ],
+    '/' => [
+        'POST' => static function(Request $request) {
+            return $request->getBody();
+        }
+    ],
 
-    '/test' =>
-        [
-            'GET' => ''
-        ],
-        [
-            'POST' => ''
-        ],
-        [
-            'PUT' => ''
-        ],
-        [
-            'DELETE' => ''
-        ],
+
+
+    '/test' =>'',
 
 ];

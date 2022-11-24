@@ -79,9 +79,10 @@ final class Server
     {
         $result = [];
 
+
         $routes = require 'app/routes.php';
 
-        $result = $routes[$request->getRoute()][$request->getMethod()];
+        $result = $routes[$request->getRoute()][$request->getMethod()]($request);
 
 
 
