@@ -68,29 +68,44 @@ final class Server
     }
 
     /**
-     * return either an array or throw
-     * exception with an appropriate message
-     *
      * @param Request $request
-     * @return array
+     * @return array|string|null
      * @throws Exception
      */
-    private function kernel(Request $request): array|string
+    private function kernel(Request $request): array|string|null
     {
-        $result = [];
+        $result = null;
+        $routeAllowed = true;
+        $currentRoute = $request->getRoute();
+        $currentMethod = $request->getMethod();
 
         $middlewares = require 'app/middlewares.php';
         $routes = require 'app/routes.php';
 
-        $allowed = array_walk($middlewares, static function ($array) {
+        foreach ($middlewares as $middleware) {
+           if (in_array($currentRoute, $middleware['routes'], true)) {
+               $routeAllowed = $middleware['function']($request);
+               if (!is_bool($routeAllowed)) {
+                   throw new Exception('ERROR: all middlewares should return only boolean type');
+               }
+           }
+        }
 
-            array_map(static function($value) {
-
-            }, $array['routes']);
-        });
-
-        if ($allowed) {
-            $result = $routes[$request->getRoute()][$request->getMethod()]($request);
+        if ($routeAllowed) {
+            if ($routes[$request->getRoute()]) {
+                if ($routes[$request->getRoute()][$request->getMethod()]) {
+                    $result = $routes[$request->getRoute()][$request->getMethod()]($request);
+                    if (!(is_string($result) || is_array($result))) {
+                        throw new Exception('ERROR: the route handler should return or array or string');
+                    }
+                } else {
+                    throw new Exception('ERROR: it\'s seems like the method format is not correct or dozen\'t define');
+                }
+            } else {
+                throw new Exception('ERROR: it\'s seems like the routes format is not correct or dozen\'t define');
+            }
+        } else {
+            throw new Exception('ERROR: the route ' . $request->getRoute() . ' is restricted on middleware level or dozen\'t define');
         }
 
         return $result;
