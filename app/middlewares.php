@@ -1,6 +1,5 @@
 <?php
 
-use Core\Middleware;
 use Core\Request;
 
 /*
@@ -20,16 +19,16 @@ return [
 
     [
         'routes' => ['/', '/test'],
-        'method' => '',
-        'middleware' => '',
+        'middleware' => static function(Request $request) {
+             return true;
+        },
     ],
+
     [
-        'routes' => ['/', '/test'],
-        'method' => '',
-        'middleware' => '',
+        'routes' => ['/blog', '/payment', '/'],
+        'middleware' => static function(Request $request) {
+            return true;
+        },
     ],
-
-
-
 
 ];

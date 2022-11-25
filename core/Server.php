@@ -79,14 +79,19 @@ final class Server
     {
         $result = [];
 
-
+        $middlewares = require 'app/middlewares.php';
         $routes = require 'app/routes.php';
 
-        $result = $routes[$request->getRoute()][$request->getMethod()]($request);
+        $allowed = array_walk($middlewares, static function ($array) {
 
+            array_map(static function($value) {
 
+            }, $array['routes']);
+        });
 
-
+        if ($allowed) {
+            $result = $routes[$request->getRoute()][$request->getMethod()]($request);
+        }
 
         return $result;
     }
