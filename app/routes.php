@@ -16,57 +16,57 @@ return [
 
     '/' => [
 
-        'GET' => static function(Request $request) {
+        'GET' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'POST' => static function(Request $request) {
+        'POST' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'PUT' => static function(Request $request) {
+        'PUT' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'DELETE' => static function(Request $request) {
+        'DELETE' => static function (Request $request) {
             return $request->getBody();
         },
     ],
 
     '/test' => [
 
-        'GET' => static function(Request $request) {
+        'GET' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'POST' => static function(Request $request) {
+        'POST' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'PUT' => static function(Request $request) {
+        'PUT' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'DELETE' => static function(Request $request) {
+        'DELETE' => static function (Request $request) {
             return $request->getBody();
         },
     ],
 
     '/blog' => [
 
-        'GET' => static function(Request $request) {
+        'GET' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'POST' => static function(Request $request) {
+        'POST' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'PUT' => static function(Request $request) {
+        'PUT' => static function (Request $request) {
             return $request->getBody();
         },
 
-        'DELETE' => static function(Request $request) {
+        'DELETE' => static function (Request $request) {
             return $request->getBody();
         },
     ],

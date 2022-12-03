@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 final class Server
 {
-    public function __construct(private string $serverHost = '127.0.0.1:8901')
+    public function __construct(private readonly string $serverHost = '127.0.0.1:8901')
     {
         //
     }
@@ -83,12 +83,12 @@ final class Server
         $routes = require 'app/routes.php';
 
         foreach ($middlewares as $middleware) {
-           if (in_array($currentRoute, $middleware['routes'], true)) {
-               $routeAllowed = $middleware['function']($request);
-               if (!is_bool($routeAllowed)) {
-                   throw new Exception('ERROR: all middlewares should return only boolean type');
-               }
-           }
+            if (in_array($currentRoute, $middleware['routes'], true)) {
+                $routeAllowed = $middleware['function']($request);
+                if (!is_bool($routeAllowed)) {
+                    throw new \RuntimeException('ERROR: all middlewares should return only boolean type');
+                }
+            }
         }
 
         if ($routeAllowed) {
@@ -96,16 +96,16 @@ final class Server
                 if ($routes[$request->getRoute()][$request->getMethod()]) {
                     $result = $routes[$request->getRoute()][$request->getMethod()]($request);
                     if (!(is_string($result) || is_array($result))) {
-                        throw new Exception('ERROR: the route handler should return or array or string');
+                        throw new \RuntimeException('ERROR: the route handler should return or array or string');
                     }
                 } else {
-                    throw new Exception('ERROR: it\'s seems like the method format is not correct or dozen\'t define');
+                    throw new \RuntimeException('ERROR: it\'s seems like the method format is not correct or doesn\'t define');
                 }
             } else {
-                throw new Exception('ERROR: it\'s seems like the routes format is not correct or dozen\'t define');
+                throw new \RuntimeException('ERROR: it\'s seems like the routes format is not correct or doesn\'t define');
             }
         } else {
-            throw new Exception('ERROR: the route ' . $request->getRoute() . ' is restricted on middleware level or dozen\'t define');
+            throw new \RuntimeException('ERROR: the route ' . $request->getRoute() . ' is restricted on middleware level or doesn\'t define');
         }
 
         return $result;

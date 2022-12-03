@@ -16,14 +16,14 @@ return [
 
     [
         'routes' => ['/', '/test'],
-        'function' => static function(Request $request) {
-             return false;
+        'function' => static function (Request $request) {
+            return false;
         },
     ],
 
     [
         'routes' => ['/blog', '/payment'],
-        'function' => static function(Request $request) {
+        'function' => static function (Request $request) {
             return true;
         },
     ],
