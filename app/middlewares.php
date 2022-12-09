@@ -17,14 +17,14 @@ return [
     [
         'routes' => ['/', '/test'],
         'function' => static function (Request $request) {
-            return false;
+            return true;
         },
     ],
 
     [
         'routes' => ['/blog', '/payment'],
         'function' => static function (Request $request) {
-            return true;
+            return false;
         },
     ],
 

@@ -92,9 +92,9 @@ final class Server
         }
 
         if ($routeAllowed) {
-            if ($routes[$request->getRoute()]) {
-                if ($routes[$request->getRoute()][$request->getMethod()]) {
-                    $result = $routes[$request->getRoute()][$request->getMethod()]($request);
+            if ($routes[$currentRoute]) {
+                if ($routes[$currentRoute][$currentMethod]) {
+                    $result = $routes[$currentRoute][$currentMethod]($request);
                     if (!(is_string($result) || is_array($result))) {
                         throw new \RuntimeException('ERROR: the route handler should return or array or string');
                     }
