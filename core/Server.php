@@ -54,11 +54,9 @@ final class Server
                 $response = $e->getMessage();
             }
 
-            if (is_string($response)) {
-                return Response::plaintext($response);
-            }
-
-            return Response::json($response);
+            return is_string($response)
+                ? Response::plaintext($response)
+                : Response::json($response);
         });
 
         $socket = new SocketServer($this->serverHost);
