@@ -1,5 +1,6 @@
 <?php
 
+use App\Repositories\Test\TestRepo;
 use Core\Request;
 
 /*
@@ -17,7 +18,8 @@ return [
     '/' => [
 
         'GET' => static function (Request $request) {
-            return $request->getBody();
+
+            return (new TestRepo())->someOutput(); //$request->getBody();
         },
 
         'POST' => static function (Request $request) {
